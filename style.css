@@ -27,8 +27,55 @@ input[type="number"] {
 
 .back-btn {
     background-color: #f44336;
+    margin-bottom: 20px;
 }
 .lifts-section{
     display: none;
     margin: 2% auto;
+}
+
+.box{
+    text-align: end;
+}
+.buttonLift{
+    display: flex;
+    margin: 20px;
+}
+
+.button {
+    width: 50px;
+    display: flex;
+    flex-direction: column;
+    margin: 24px 24px;
+  }
+
+.up{
+    font-size: 13px;
+    border-radius: 1px;
+    transition-duration: 0.4s;
+    background-color: greenyellow;
+    color: var(--color-dark-800);
+    margin: 12px;
+}
+
+.down{
+    font-size: 13px;
+    border-radius: 1px;
+    transition-duration: 0.4s;
+    background-color: orange;
+    color: var(--color-dark-800);
+    margin: 12px;
+}
+
+.down button::before {
+    content: '\25BC'; /* Down arrow character */
+}
+
+.up:hover{
+    background-color: darkolivegreen;
+    color: white;
+}
+.down:hover{
+    background-color: darkred;
+    color: white;
 }
