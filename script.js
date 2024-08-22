@@ -86,9 +86,9 @@ function createFloors(totalFloors, liftCount) {
       floorElement.appendChild(floorSeparator);
   
       // Hide buttons based on floor number
-      if (currentFloor === liftCount) {
+      if (currentFloor == totalFloors) {
         upButton.style.display = 'none';
-      } else if (currentFloor === 1) {
+      } else if (currentFloor == 1) {
         downButton.style.display = 'none';
       }
   
