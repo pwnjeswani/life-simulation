@@ -95,4 +95,54 @@ function createFloors(totalFloors, liftCount) {
       // Append floor element to container
       floorContainer.appendChild(floorElement);
     }
-  }
+    // Create the main lift container
+    let liftContainer = document.createElement('div');
+    liftContainer.classList.add('mainLift');
+
+    // Loop to create individual lifts
+    for (let currentLift = 1; currentLift <= liftCount; currentLift++) {
+
+        console.log("inside lifts loop now")
+        // Create a single lift element
+        let liftElement = document.createElement('div');
+        liftElement.classList.add('lift');
+        liftElement.id = `lift${currentLift}`;
+        liftElement.setAttribute('flag', 'free');
+
+        // Create the gates container
+        let gatesContainer = document.createElement('div');
+        gatesContainer.classList.add('gates');
+        gatesContainer.id = `gates`;
+
+        // Create the floor number display
+        let floorNumberDisplay = document.createElement('div');
+        floorNumberDisplay.classList.add('floornobox');
+        floorNumberDisplay.id = `lifts${currentLift}`;
+        gatesContainer.appendChild(floorNumberDisplay);
+
+        // Create the individual gate elements
+        let gate1 = document.createElement('div');
+        gate1.classList.add('gate1');
+        gatesContainer.appendChild(gate1);
+
+        let gate2 = document.createElement('div');
+        gate2.classList.add('gate2');
+        gatesContainer.appendChild(gate2);
+
+        // Add the gates container to the lift element
+        liftElement.appendChild(gatesContainer);
+
+        // Add the lift element to the main container
+        liftContainer.appendChild(liftElement);
+    }
+
+    // Select all created buttonLift elements
+    const buttonLiftElements = document.querySelectorAll('.buttonLift');
+
+    // Get the last buttonLift element
+    const lastButtonLift = buttonLiftElements[buttonLiftElements.length - 1];
+
+    // Append the main lift container to the last buttonLift element
+    lastButtonLift.appendChild(liftContainer);
+
+}

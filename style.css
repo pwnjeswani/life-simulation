@@ -39,7 +39,7 @@ input[type="number"] {
 }
 .buttonLift{
     display: flex;
-    margin: 20px;
+    margin: 10px;
 }
 
 .button {
@@ -67,10 +67,6 @@ input[type="number"] {
     margin: 12px;
 }
 
-.down button::before {
-    content: '\25BC'; /* Down arrow character */
-}
-
 .up:hover{
     background-color: darkolivegreen;
     color: white;
@@ -79,3 +75,26 @@ input[type="number"] {
     background-color: darkred;
     color: white;
 }
+
+.mainLift{
+    display: flex;
+    margin-left: 10px;
+}
+
+.lift{
+    width: 50px;
+    height: 60px;
+    background-color: var(--color-gray-400);
+    border: 2px solid darkgray;
+    margin: 10px 20px 10px 50px ;
+}
+.hrfloorName{
+    display: flex;
+    flex-direction: row;
+    margin: 3px;
+}
+hr{
+    flex-grow:1;
+    height: 1px;
+    border-top: 2px solid black;
+} 
