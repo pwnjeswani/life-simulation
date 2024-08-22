@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floor and Lift Input</title>
+    <title>Lift Simulation Project</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="input-section">
-        <h1 class="title">Enter Number of Floors and Lifts</h1>
-        <form id="myForm">
-            <label for="floors">Number of Floors:</label>
-            <input type="number" id="floors" name="floors" min="1" max="50" required>
+    <div class="input-section">
+        <h1 class="title">Lift Simulation</h1>
+        <label for="floors">Number of Floors:</label>
+        <input type="number" id="floors" name="floors" min="1" max="50" placeholder="Enter Upto 50 floors" required>
         </br>
-            <label for="lifts">Number of Lifts:</label>
-            <input type="number" id="lifts" name="lifts" min="1" max="50" required>
+        <label for="lifts">Number of Lifts:</label>
+        <input type="number" id="lifts" name="lifts" min="2" placeholder="Enter Atleast 2 lifts" required>
         </br>
-        <button class = "submit-btn" onclick="startSimulation()">Start Simulation</button>
-        <div class="floor-container"></div>
+        <button class = "submit-btn">Start Simulation</button>
         </form>
-        
-        <div class="elevator-shaft"></div>
-        <div class="floor-container"></div>
+    </div>
+    <div class="lifts-section">
+        <button class = "back-btn">Back</button>
     </div>
     <script src="script.js"></script>
 </body>
