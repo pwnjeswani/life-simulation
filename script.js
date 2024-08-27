@@ -1,19 +1,27 @@
 let simulate = document.querySelector('.submit-btn');
 let back = document.querySelector('.back-btn');
 
+const floorHeightInPx = getComputedStyle(document.querySelector("html")).getPropertyValue("--floor-height");
+const floorHeight = parseInt(floorHeightInPx.slice(0, floorHeightInPx.length - 2));
+let liftsCount, floorsCount;
+const liftsAvailabilitiy = new Map();
+const liftAt = new Map();
+const floorLiftMap = new Map();
+const pendingCalls = [];
+
 simulate.addEventListener('click', (e) => {
     e.preventDefault();
-    const floors = document.querySelector('#floors').value;
-    const lifts = document.querySelector('#lifts').value;
+    floorsCount = document.querySelector('#floors').value;
+    liftsCount = document.querySelector('#lifts').value;
 
-     console.log(floors, "-- ",lifts);
+     console.log(floorsCount, "-- ",lifts);
     
-     if (isNaN(floors) || floors < 1 || floors > 50) {
-        alert('Please enter a valid number of floors between 1 and 50.');
+     if (isNaN(floorsCount) || floorsCount < 1) {
+        alert('Please enter a valid number of floors more than 1');
         return;
       }
     
-      if (isNaN(lifts) || lifts < 2 || lifts > 50) {
+      if (isNaN(liftsCount) || liftsCount < 2 || liftsCount > 50) {
         alert('Please enter a valid number of lifts between 2 and 50.');
         return;
       }
@@ -21,7 +29,7 @@ simulate.addEventListener('click', (e) => {
     document.querySelector('.lifts-section').style.display = 'block';
     document.querySelector('.input-section').style.display = 'none';
     console.log('second page is visbile now')
-    createFloors(floors,lifts);
+    createFloors(floorsCount,liftsCount);
 });    
 
 back.addEventListener('click',gobackToInput)
@@ -45,7 +53,7 @@ function deleteFloors() {
 function createFloors(totalFloors, liftCount) {
     const floorContainer = document.querySelector('.lifts-section');
   
-    for (let currentFloor = totalFloors; currentFloor > 0; currentFloor--) {
+    for (let currentFloor = totalFloors-1; currentFloor >= 0; currentFloor--) {
       // Create floor element
       const floorElement = document.createElement('div');
       floorElement.classList.add('box');
@@ -59,12 +67,15 @@ function createFloors(totalFloors, liftCount) {
       upButton.className  = 'up';
       upButton.textContent = 'Up';
       upButton.id = `up${currentFloor}`;
+      upButton.addEventListener("click", (event) => handleLiftCall(currentFloor));
+        
   
       // Create button element for Down
       const downButton = document.createElement('button');
       downButton.className = 'down';
       downButton.textContent = 'Down';
       downButton.id = `down${currentFloor}`;
+      downButton.addEventListener("click", (event) => handleLiftCall(currentFloor));
   
       // Add buttons to button container
       buttonContainer.appendChild(upButton);
@@ -86,17 +97,20 @@ function createFloors(totalFloors, liftCount) {
       floorElement.appendChild(floorSeparator);
   
       // Hide buttons based on floor number
-      if (currentFloor == totalFloors) {
+      if (currentFloor == totalFloors-1) {
         upButton.style.display = 'none';
-      } else if (currentFloor == 1) {
+      } else if (currentFloor == 0) {
         downButton.style.display = 'none';
       }
   
       // Append floor element to container
+      const floorId = `floor-${currentFloor}`;
+      floorLiftMap.set(floorId,null);
       floorContainer.appendChild(floorElement);
     }
     // Create the main lift container
     let liftContainer = document.createElement('div');
+    floorLiftMap.set("floor-0", null);
     liftContainer.classList.add('mainLift');
 
     // Loop to create individual lifts
@@ -134,6 +148,9 @@ function createFloors(totalFloors, liftCount) {
 
         // Add the lift element to the main container
         liftContainer.appendChild(liftElement);
+        liftsAvailabilitiy.set(`lift${currentLift}`, true);
+        liftAt.set(`lift${currentLift}`, 0);
+    
     }
 
     // Select all created buttonLift elements
@@ -144,5 +161,93 @@ function createFloors(totalFloors, liftCount) {
 
     // Append the main lift container to the last buttonLift element
     lastButtonLift.appendChild(liftContainer);
+    
 
+}
+
+function handleLiftCall(currentFloor){
+    console.log("handleLiftCall ---- with currentFloor",currentFloor);
+    const floorId = `floor-${currentFloor}`;
+    if(floorLiftMap.get(floorId) != null){
+        const mappedLiftId = floorLiftMap.get(floorId);
+        if(liftsAvailabilitiy.get(mappedLiftId)){
+            liftsAvailabilitiy.set(mappedLiftId, false);
+            openAndCloseDoors(floorId, mappedLiftId);
+        }
+        return;
+    }
+    //search for a freeLift
+    for(let liftNumber = 1; liftNumber <= liftsCount; liftNumber++){
+        const liftId = `lift${liftNumber}`;
+        if(liftsAvailabilitiy.get(liftId)){
+            moveLift(floorId, liftId);
+            return;
+        }
+    }
+    
+    pendingCalls.push(floorId);
+}   
+
+function moveLift(floorId, liftId){
+    if(floorLiftMap.get(floorId) != null){
+        const mappedLiftId = floorLiftMap.get(floorId);
+        if(liftsAvailabilitiy.get(mappedLiftId)){
+            liftsAvailabilitiy.set(mappedLiftId, false);
+            openAndCloseDoors(floorId, mappedLiftId);
+        }
+        return;
+    }
+
+    liftsAvailabilitiy.set(liftId, false);
+    floorLiftMap.set(floorId, liftId);
+    floorLiftMap.forEach((value, key) => {
+        if(key !== floorId && value === liftId){
+            floorLiftMap.set(key, null);
+        }
+    });
+
+    const floor = document.querySelector(`#${floorId}`);
+    console.log("before document.querySelector lifId is - ",liftId);
+    const lift = document.querySelector(`#${liftId}`);
+    const arr = floorId.split('-');
+    const floorNumber = parseInt(arr[arr.length - 1]);
+    console.log("before document.querySelector floorNumber is - ",floorNumber);
+    const prevFloor = liftAt.get(liftId);
+    const diff = Math.abs(prevFloor - floorNumber);
+    const transitionDuration = diff*2;
+
+    console.log("floorNumber*floorHeight",floorNumber*floorHeight)
+
+    console.log("floorNumber",floorNumber)
+
+    console.log("floorHeight",floorHeight)
+    lift.style.transform = `translateY(-${floorNumber*floorHeight}px)`;
+    lift.style.transition  = `all ${transitionDuration}s`;
+    setTimeout(() => {
+        openAndCloseDoors(floorId, liftId);
+    }, transitionDuration * 1000);  
+
+    liftAt.set(liftId, floorNumber);
+}
+
+function openAndCloseDoors(floorId, liftId) {
+
+    const lift = document.querySelector(`#${liftId}`);
+    const leftDoor = lift.querySelector(".gate1");
+    const rightDoor = lift.querySelector(".gate2");
+    leftDoor.classList.add("left-move");
+    rightDoor.classList.add("right-move");  
+    setTimeout(() => {
+        leftDoor.classList.remove("left-move");
+        rightDoor.classList.remove("right-move"); 
+        //this lift will be free after 2500ms
+        setTimeout(() => {
+            liftsAvailabilitiy.set(liftId, true);
+            if(pendingCalls.length > 0){
+                const floorIdFromRemainingCalls = pendingCalls[0];
+                pendingCalls.shift();
+                moveLift(floorIdFromRemainingCalls, liftId);
+            }
+        }, 2500);
+    }, 2500);
 }

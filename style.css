@@ -1,3 +1,14 @@
+:root {
+    --font-primary: "Bebas Neue", cursive;
+    --font-secondary: "Inter", sans-serif;
+    --color-dark-800: #212529;
+    --color-gray-400: #dddddd;
+    --base-transition: 0.4s ease;
+    --radius-10: 10px;
+    --color-purple-600: #7c27ce;
+    --color-light-100: #fff;
+    --floor-height: 90px;
+  }
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -40,6 +51,7 @@ input[type="number"] {
 .buttonLift{
     display: flex;
     margin: 10px;
+    height: 50px;
 }
 
 .button {
@@ -78,12 +90,12 @@ input[type="number"] {
 
 .mainLift{
     display: flex;
-    margin-left: 10px;
+    margin-left: 5%;
 }
 
 .lift{
-    width: 50px;
-    height: 60px;
+    width: 40px;
+    height: 50px;
     background-color: var(--color-gray-400);
     border: 2px solid darkgray;
     margin: 10px 20px 10px 50px ;
@@ -98,3 +110,22 @@ hr{
     height: 1px;
     border-top: 2px solid black;
 } 
+.gates{
+    display: flex;
+
+}
+.gate1 , .gate2{
+    width: 20px;
+    height: 50px;
+    margin: 1px;
+    background-color:var(--color-dark-800);
+    transition: width 2.5s ease-in-out;
+}
+
+.left-move{
+    transform: translateX(-100%);
+}
+
+.right-move{
+    transform: translateX(100%);
+}
